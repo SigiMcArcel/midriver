@@ -6,12 +6,12 @@ INCLUDEDIR=/usr/include
 
 INCLUDES = -I. -I/.
 CXX_FLAGS = -fpic -Wall
-LD_FLAGS = -shared -lsndfile -lpthread -lasound
+LD_FLAGS = -shared
 
 SOURCES=GPIODriver.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
-LIBRARYOUT=libmisound.so
+LIBRARYOUT=libmidriver.so
 
 
 .cpp.o:
