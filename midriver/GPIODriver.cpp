@@ -68,7 +68,7 @@ bool miDriver::GPIODriver::GpioRead(int32_t pin, DriverResults* result)
 	std::fstream stream;
 	std::string strCmd = string_format("%s/gpio%d/value", gpioPath.c_str(), pin);
 	std::string strVal = "";
-	int length = gpioValueResultSize;
+	int length = (int)gpioValueResultSize;
 	char* buffer = new char[length];
 
 	stream.open(strCmd, std::fstream::in);
