@@ -58,9 +58,9 @@ Microsoft Visual F# Tools
 Visual Studio IntelliCode   2.2
 KI-gestützte Entwicklung für Visual Studio.
 
-## Linux
-Linux version 5.10.0-12-amd64 (debian-kernel@lists.debian.org) (gcc-10 (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2) #1 SMP Debian 5.10.103-1 (2022-03-07)
+## Linux Raspberry PI
+Linux version 5.15.32-v7l+ (dom@buildbot) (arm-linux-gnueabihf-gcc-8 (Ubuntu/Linaro 8.4.0-3ubuntu1) 8.4.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #1538 SMP Thu Mar 31 19:39:41 BST 2022
 
 ### gcc
-gcc version 10.2.1 20210110 (Debian 10.2.1-6) 
+gcc (Raspbian 10.2.1-6+rpi1) 10.2.1 20210110
 
