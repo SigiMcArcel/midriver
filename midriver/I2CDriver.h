@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include "DriverBase.h"
+
 namespace miDriver
 {
 	class I2CDriver
@@ -7,15 +9,15 @@ namespace miDriver
 	private:
 		const std::string I2CPath = "/dev/i2c-1";
 
-		int open();
+		miDriver::DriverResults open();
 		void close(int fd);
 	public:
 		I2CDriver()
 		{
 
 		}
-		int I2CRead(int address, int len, unsigned char* data);
-		int I2CWrite(int address, int len, unsigned char* data);
+		miDriver::DriverResults I2CRead(int address, int len, unsigned char* data);
+		miDriver::DriverResults I2CWrite(int address, int len, unsigned char* data);
 
 	};
 }
