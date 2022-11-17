@@ -80,10 +80,7 @@ bool miDriver::GPIODriver::GpioRead(int32_t pin, DriverResults* result)
 
 		return false;
 	}
-	
 
-
-	
 	stream.read(buffer, length);
 	if (stream.fail())
 	{
