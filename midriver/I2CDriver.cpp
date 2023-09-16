@@ -4,64 +4,61 @@
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
 
+
 miDriver::DriverResults miDriver::I2CDriver::open()
 {
-	if (::open(I2CPath.c_str(), O_RDWR) > -1)
-	{
-		return miDriver::DriverResults::Ok;
-	}
-	return miDriver::DriverResults::ErrorOpen;
-}
-
-void miDriver::I2CDriver::close(int fd)
-{
-	::close(fd);
-}
-
-miDriver::DriverResults miDriver::I2CDriver::I2CRead(int address, int len, unsigned char* data)
-{
 	int result = 0;
-	int fd = open();
-	if (fd < 0)
+	if (_Handle != _OpenErrorResult)
 	{
-		return miDriver::DriverResults::ErrorRead;
+		return miDriver::DriverResults::ErrorAllreadyOpen;
 	}
-	result = ::ioctl(fd, I2C_SLAVE, address);
-	if (result < 0)
+	_Handle = ::open(_I2CPath.c_str(), O_RDWR);
+	if(_Handle != _OpenErrorResult)
 	{
-		close(fd);
-		return miDriver::DriverResults::ErrorRead;
+		return miDriver::DriverResults::ErrorOpen;
 	}
-	result = (int)::read(fd, data, len);
-	if (result != len)
+	result = ::ioctl(_Handle, I2C_SLAVE, _Address);
+	if (result == _OpenErrorResult)
 	{
-		close(fd);
-		return miDriver::DriverResults::ErrorRead;
+		return miDriver::DriverResults::ErrorOpen;
 	}
-	close(fd);
 	return miDriver::DriverResults::Ok;
 }
 
-miDriver::DriverResults miDriver::I2CDriver::I2CWrite(int address, int len, unsigned char* data)
+void miDriver::I2CDriver::close()
+{
+	::close(_Handle);
+	_Handle == -1;
+}
+
+miDriver::DriverResults miDriver::I2CDriver::I2CRead(int len, unsigned char* data)
 {
 	int result = 0;
-	int fd = open();
-	if (fd < 0)
+	if (_Handle == _OpenErrorResult)
+	{
+		return miDriver::DriverResults::ErrorNotOpen;
+	}
+	result = ::ioctl(_Handle, I2C_SLAVE, _Address);
+	
+	result = (int)::read(_Handle, data, len);
+	if (result != len)
 	{
 		return miDriver::DriverResults::ErrorRead;
 	}
-	result = ::ioctl(fd, I2C_SLAVE, address);
-	if (result < 0)
+	return miDriver::DriverResults::Ok;
+}
+
+miDriver::DriverResults miDriver::I2CDriver::I2CWrite(int len, unsigned char* data)
+{
+	int result = 0;
+	if (_Handle == _OpenErrorResult)
 	{
-		close(fd);
-		return miDriver::DriverResults::ErrorWrite;
+		return miDriver::DriverResults::ErrorRead;
 	}
-	result = (int)::write(fd, data, len);
+	result = (int)::write(_Handle, data, len);
 	if (result != len)
 	{
-		close(fd);
 		return miDriver::DriverResults::ErrorWrite;
 	}
-	close(fd);
 	return miDriver::DriverResults::Ok;
 }

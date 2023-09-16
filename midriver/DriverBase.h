@@ -8,6 +8,8 @@ namespace miDriver
 	typedef enum DriverResults_e
 	{
 		Ok,
+		ErrorAllreadyOpen,
+		ErrorNotOpen,
 		ErrorOpen,
 		ErrorRead,
 		ErrorWrite
@@ -23,6 +25,8 @@ namespace miDriver
 		std::snprintf(buf.get(), size, format.c_str(), args ...);
 		return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
 	}
+
+
 }
 
 
