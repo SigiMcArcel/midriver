@@ -101,8 +101,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <RemotePostBuildEvent>
-      <Command>cp $(RemoteTargetPath) /usr/lib &amp;&amp; cp $(RemoteDeployDir)/GPIODriver.h  /usr/include/mi/midriver/GPIODriver.h &amp;&amp; cp $(RemoteDeployDir)/I2CDriver.h /usr/include/mi/midriver/I2CDriver.h &amp;&amp; cp $(RemoteDeployDir)/SPIDriver.h  /usr/include/mi/midriver/SPIDriver.h</Command>
+      <Command>cp $(RemoteTargetPath) /usr/lib </Command>
     </RemotePostBuildEvent>
+    <RemotePreBuildEvent>
+      <Command> cp *.h /usr/include/mi/midriver/</Command>
+    </RemotePreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

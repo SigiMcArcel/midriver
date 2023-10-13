@@ -1,5 +1,5 @@
 #pragma once
-#include "DriverBase.h"
+#include <mi/midriver/DriverBase.h>
 
 namespace miDriver
 {

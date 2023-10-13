@@ -1,4 +1,4 @@
-#include "GPIODriver.h"
+#include <mi/midriver/GPIODriver.h>
 #include <string>
 #include <iostream>                             // Standardstream-Funktionaliät einbinden
 #include <fstream> 
