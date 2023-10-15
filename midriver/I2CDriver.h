@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <mi/midriver/DriverBase.h>
+#include "DriverBase.h"
 
 namespace miDriver
 {

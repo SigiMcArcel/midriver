@@ -1,4 +1,4 @@
-#include <mi/midriver/SPIDriver.h>
+#include "SPIDriver.h"
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>

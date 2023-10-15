@@ -1,4 +1,4 @@
-#include <mi/midriver/I2CDriver.h>
+#include "I2CDriver.h"
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
