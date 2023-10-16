@@ -1,8 +1,7 @@
-
-
 DESTDIR=
-LIBDIR=/usr/lib
-INCLUDEDIR=/usr/include
+prefix=/usr
+includedir=$(prefix)/include
+libdir=$(prefix)/lib
 
 INCLUDES = -I. -I/.
 CXX_FLAGS = -fpic -Wall
@@ -23,10 +22,12 @@ clean:
 	
 
 install: $(LIBRARYOUT)
-	mkdir -p $(DESTDIR)/$(LIBDIR)
-	mkdir -p $(DESTDIR)/$(INCLUDEDIR)
-	cp GPIODriver.h $(DESTDIR)/$(INCLUDEDIR)
-	cp I2CDriver.h $(DESTDIR)/$(INCLUDEDIR)
-	cp SPIDriver.h $(DESTDIR)/$(INCLUDEDIR)
-	cp DriverBase.h $(DESTDIR)/$(INCLUDEDIR)
-	cp $(LIBRARYOUT) $(DESTDIR)/$(LIBDIR)
+	install -d $(DESTDIR)/${libdir}
+	install -D -m 0644 libmidriver.so $(DESTDIR)/${libdir}/$(LIBRARYOUT)
+	install -d $(DESTDIR)/${includedir}
+	install -d $(DESTDIR)/${includedir}/mi
+	install -d $(DESTDIR)/${includedir}/mi/midriver
+	install -D -m 0644 DriverBase.h $(DESTDIR)/${includedir}/mi/midriver/DriverBase.h
+	install -D -m 0644 I2CDriver.h $(DESTDIR)/${includedir}/mi/midriver/I2CDriver.h
+	install -D -m 0644 SPIDriver.h $(DESTDIR)/${includedir}/mi/midriver/SPIDriver.h
+	install -D -m 0644 GPIODriver.h $(DESTDIR)/${includedir}/mi/midriver/GPIODriver.h
