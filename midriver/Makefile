@@ -4,7 +4,7 @@ includedir=$(prefix)/include
 libdir=$(prefix)/lib
 
 INCLUDES = -I. -I/.
-CXX_FLAGS = -fpic -Wall
+CXX_FLAGS = -fpic -Wall -Wl,--no-undefined
 LD_FLAGS = -shared
 
 SOURCES=GPIODriver.cpp I2CDriver.cpp SPIDriver.cpp
