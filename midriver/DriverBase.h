@@ -12,7 +12,9 @@ namespace miDriver
 		ErrorNotOpen,
 		ErrorOpen,
 		ErrorRead,
-		ErrorWrite
+		ErrorWrite,
+		ErrorBufferEmpty,
+		ErrorBufferOverflow
 	}DriverResults;
 
 	template<typename ... Args>
