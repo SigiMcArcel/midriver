@@ -19,10 +19,15 @@ int main()
     miDriver::MidiDriver* _d = miDriver::MidiDriver::GetInstance("/dev/snd/midiC1D0");
     _d->open();
 
-    _d->write(msg);
+   
 
 
-
+    while (1)
+    {
+        _d->write(msg);
+        //_d->read(msg);
+        usleep(50000);
+    }
     
     return 0;
 }
