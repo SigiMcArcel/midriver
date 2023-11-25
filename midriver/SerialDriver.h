@@ -34,6 +34,7 @@ namespace miDriver
 		SerialDriverStringReceivedEvent* _StringReceivedEvent;
 		std::string _Delemiter;
 		std::size_t _Threshold;
+		miutils::CriticalSection _CriticalSection;
 
 		int read(int len, unsigned char* data);
 		miDriver::DriverResults write(int len, unsigned char* data);
@@ -54,6 +55,7 @@ namespace miDriver
 			, _StringReceivedEvent(nullptr)
 			, _Delemiter("")
 			, _Threshold(0)
+			, _CriticalSection()
 		{
 		}
 
@@ -70,6 +72,7 @@ namespace miDriver
 			, _StringReceivedEvent(nullptr)
 			, _Delemiter("")
 			, _Threshold(0)
+			, _CriticalSection()
 		{
 
 		}

@@ -57,8 +57,10 @@ int miDriver::SerialDriver::read(int len, unsigned char* data)
 		}
 		bytesread += result;
 	} while (bytesread < len && result > 0);
-	
-	printf(" miDriver::SerialDriver::read  %d 0x%2x 0x%2x 0x%2x\n", len, data[0], data[1], data[2]);
+	/*if (bytesread)
+	{
+		printf(" miDriver::SerialDriver::read  %d 0x%2x 0x%2x 0x%2x\n", bytesread, data[0], data[1], data[2]);
+	}*/
 	return bytesread;
 }
 
@@ -70,7 +72,7 @@ miDriver::DriverResults miDriver::SerialDriver::write(int len, unsigned char* da
 	{
 		return miDriver::DriverResults::ErrorWrite;
 	}
-	printf(" miDriver::SerialDriver::write  %d 0x%2x 0x%2x 0x%2x\n", len, data[0], data[1], data[2]);
+	//printf(" miDriver::SerialDriver::write  %d 0x%2x 0x%2x 0x%2x\n", len, data[0], data[1], data[2]);
 	do
 	{
 		result = (int)::write(_Handle, data, len);
@@ -88,7 +90,7 @@ miDriver::DriverResults miDriver::SerialDriver::write(int len, unsigned char* da
 void miDriver::SerialDriver::readProc()
 {
 	unsigned char data[2] = { 0,0 };
-	if (read(1, data) > -1)
+	if (read(1, data) > 0)
 	{
 		_InputBuffer.push_back(data[0]);
 
@@ -118,25 +120,31 @@ void miDriver::SerialDriver::readProc()
 
 void miDriver::SerialDriver::writeProc()
 {
+	_Semaphore.wait(0);
+	
 	while (!_OutputBuffer.empty())
 	{
-		_Semaphore.wait(0);
+		
 		unsigned char data = _OutputBuffer.front();
-		_InputBuffer.pop_front();
+		_OutputBuffer.pop_front();
 		write(1, &data);
 	}
 }
 
 miDriver::DriverResults  miDriver::SerialDriver::serialWrite(const std::list<unsigned char>& data)
 {
+	_CriticalSection.EnterCriticalSection();
 	_OutputBuffer.insert(_OutputBuffer.end(), data.begin(), data.end());
+	_CriticalSection.LeaveCriticalSection();
 	_Semaphore.set();
 	return miDriver::DriverResults();
 }
 
 miDriver::DriverResults  miDriver::SerialDriver::serialWrite(const std::string& data)
 {
+	_CriticalSection.EnterCriticalSection();
 	_OutputBuffer.insert(_OutputBuffer.end(), data.begin(), data.end());
+	_CriticalSection.LeaveCriticalSection();
 	_Semaphore.set();
 
 	return miDriver::DriverResults();
@@ -180,6 +188,7 @@ miDriver::DriverResults  miDriver::SerialDriver::serialRegister(SerialDriverStri
 	{
 		return miDriver::DriverResults::ErrorOpen;
 	}
+	_Delemiter = delemiter;
 	_StringReceivedEvent = callback;
 	return miDriver::DriverResults();
 }

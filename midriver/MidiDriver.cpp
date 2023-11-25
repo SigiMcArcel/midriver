@@ -49,7 +49,7 @@ miDriver::DriverResults miDriver::MidiDriver::read(int len, unsigned char* data)
 		printf("miDriver::MidiDriver::read  error %s\n", strerror(errno));
 		return miDriver::DriverResults::ErrorRead;
 	}
-	printf(" miDriver::MidiDriver::read  %d 0x%2x 0x%2x 0x%2x\n", len, data[0], data[1], data[2]);
+	//printf(" miDriver::MidiDriver::read  %d 0x%2x 0x%2x 0x%2x\n", len, data[0], data[1], data[2]);
 	return miDriver::DriverResults::Ok;
 }
 
@@ -60,7 +60,7 @@ miDriver::DriverResults miDriver::MidiDriver::write(int len, unsigned char* data
 	{
 		return miDriver::DriverResults::ErrorWrite;
 	}
-	printf(" miDriver::MidiDriver::write  %d 0x%2x 0x%2x 0x%2x\n", len, data[0],data[1],data[2]);
+	
 	result = (int)::write(_Handle, data, len);
 	if (result == -1)
 	{
@@ -97,12 +97,10 @@ miDriver::DriverResults miDriver::MidiDriver::read(miDriver::MidiMessage& data)
 
 miDriver::DriverResults miDriver::MidiDriver::write(const miDriver::MidiMessage& data)
 {
-	if (_MidiOutputBuffer.size() > _MaxWriteMessage)
-	{
-		return  miDriver::DriverResults_e::ErrorBufferOverflow;
-	}
-	
+	_CriticalSection.EnterCriticalSection();
+	//printf(" miDriver::MidiDriver::write  %d 0x%2x 0x%2x 0x%2x\n", data.Len, data.U.MessageRaw[0], data.U.MessageRaw[1], data.U.MessageRaw[2]);
 	_MidiOutputBuffer.push_back(data);
+	_CriticalSection.LeaveCriticalSection();
 	_Semaphore.set();
 	
 	return miDriver::DriverResults_e::Ok;

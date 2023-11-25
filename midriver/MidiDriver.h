@@ -40,7 +40,7 @@ namespace miDriver
 	class MidiDriver : public miutils::EventListener
 	{
 	private:
-		const std::size_t _MaxWriteMessage = 100;
+		const std::size_t _MaxWriteMessage = 200;
 
 		std::string _MidiDevPath;
 		int _Handle;
@@ -49,6 +49,7 @@ namespace miDriver
 		miutils::Timer _ReadTimer;
 		miutils::Timer _WriteTimer;
 		miutils::Semaphore _Semaphore;
+		miutils::CriticalSection _CriticalSection;
 
 		miDriver::DriverResults read(int len, unsigned char* data);
 		miDriver::DriverResults write(int len, unsigned char* data);
@@ -67,6 +68,7 @@ namespace miDriver
 			, _ReadTimer("ReadTimer",this)
 			, _WriteTimer("WriteTimer",this)
 			, _Semaphore()
+			, _CriticalSection()
 		{
 		}
 		MidiDriver(std::string dev)
@@ -77,6 +79,7 @@ namespace miDriver
 			, _ReadTimer("ReadTimer", this)
 			, _WriteTimer("WriteTimer", this)	
 			, _Semaphore()
+			, _CriticalSection()
 		{
 
 		}
