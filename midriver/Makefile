@@ -31,3 +31,4 @@ install: $(LIBRARYOUT)
 	install -D -m 0644 I2CDriver.h $(DESTDIR)/${includedir}/mi/midriver/I2CDriver.h
 	install -D -m 0644 SPIDriver.h $(DESTDIR)/${includedir}/mi/midriver/SPIDriver.h
 	install -D -m 0644 GPIODriver.h $(DESTDIR)/${includedir}/mi/midriver/GPIODriver.h
+	install -D -m 0644 MidiDriver.h.h $(DESTDIR)/${includedir}/mi/midriver/MidiDriver.h.h
