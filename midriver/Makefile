@@ -7,7 +7,7 @@ INCLUDES = -I. -I/.
 CXX_FLAGS = -fpic -Wall -Wl,--no-undefined
 LD_FLAGS = -shared
 
-SOURCES=GPIODriver.cpp I2CDriver.cpp SPIDriver.cpp
+SOURCES=GPIODriver.cpp I2CDriver.cpp SPIDriver.cpp MidiDriver.cpp SerialDriver.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
 LIBRARYOUT=libmidriver.so
@@ -31,4 +31,5 @@ install: $(LIBRARYOUT)
 	install -D -m 0644 I2CDriver.h $(DESTDIR)/${includedir}/mi/midriver/I2CDriver.h
 	install -D -m 0644 SPIDriver.h $(DESTDIR)/${includedir}/mi/midriver/SPIDriver.h
 	install -D -m 0644 GPIODriver.h $(DESTDIR)/${includedir}/mi/midriver/GPIODriver.h
-	install -D -m 0644 MidiDriver.h.h $(DESTDIR)/${includedir}/mi/midriver/MidiDriver.h.h
+	install -D -m 0644 MidiDriver.h $(DESTDIR)/${includedir}/mi/midriver/MidiDriver.h
+	install -D -m 0644 SerialDriver.h $(DESTDIR)/${includedir}/mi/midriver/SerialDriver.h
