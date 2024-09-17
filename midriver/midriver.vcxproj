@@ -87,6 +87,7 @@
     <ClInclude Include="GPIODriver.h" />
     <ClInclude Include="I2CDriver.h" />
     <ClInclude Include="MidiDriver.h" />
+    <ClInclude Include="ModbusDriver.h" />
     <ClInclude Include="SerialDriver.h" />
     <ClInclude Include="SPIDriver.h" />
   </ItemGroup>
@@ -94,6 +95,7 @@
     <ClCompile Include="GPIODriver.cpp" />
     <ClCompile Include="I2CDriver.cpp" />
     <ClCompile Include="MidiDriver.cpp" />
+    <ClCompile Include="ModbusDriver.cpp" />
     <ClCompile Include="SerialDriver.cpp" />
     <ClCompile Include="SPIDriver.cpp" />
   </ItemGroup>
@@ -114,7 +116,7 @@
       <Command> cp *.h /usr/include/mi/midriver/</Command>
     </RemotePreBuildEvent>
     <Link>
-      <LibraryDependencies>miutils</LibraryDependencies>
+      <LibraryDependencies>miutils;modbus</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

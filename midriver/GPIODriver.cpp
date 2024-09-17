@@ -35,12 +35,12 @@ miDriver::DriverResults miDriver::GPIODriver::GpioEnable(int32_t pin, bool enabl
 
 
 
-miDriver::DriverResults miDriver::GPIODriver::GpioSetDirection(int32_t pin, int32_t direction)
+miDriver::DriverResults miDriver::GPIODriver::GpioSetDirection(int32_t pin, miDriver::GPIODirection direction)
 {
 	std::fstream stream;
 	std::string strCmd = string_format("%s/gpio%d/direction", gpioPath.c_str(), pin);
 	std::string strVal = "in";
-	if (direction == 1)
+	if (direction == GPIODirection::Output)
 	{
 		strVal = "out";
 	}

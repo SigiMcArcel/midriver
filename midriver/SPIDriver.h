@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
+#include "DriverBase.h"
 
-namespace midriver
+namespace miDriver
 {
 	typedef enum SPIModes_e
 	{
@@ -24,37 +25,38 @@ namespace midriver
 	class SPIDriver
 	{
 	private:
-		const std::string SPI0Path = "/dev/spidev0.0";
-		const std::string SPI1Path = "/dev/spidev0.1";
-
+		
 		SPIModes _Mode;
 		int _Speed;
 		SPIBitsPerWord _Bits;
-		SPIDevices _Device;
+		std::string _Device;
+		int _Fd;
 
-		int open();
-		void close(int fd);
 		int configure(int fd);
 	public:
-		SPIDriver()
+		SPIDriver(const std::string& device)
 			:_Mode(SPIModes::SPIMode0)
 			, _Speed(1000000)
 			, _Bits(SPIBitsPerWord::SPI8Bits)
-			, _Device(SPIDevices::SPIDev0)
+			, _Device(device)
+			, _Fd(-1)
 		{
 
 		}
-		SPIDriver(SPIModes mode,int speed, SPIBitsPerWord bits, SPIDevices device)
+		SPIDriver(SPIModes mode,int speed, SPIBitsPerWord bits, const std::string& device)
 			:_Mode(mode)
 			, _Speed(speed)
 			, _Bits(bits)
 			, _Device(device)
+			, _Fd(-1)
 		{
 
 		}
-		int SPIRead(int address, int len, unsigned char* data);
-		int SPIWrite(int address, int len, unsigned char* data);
-		int SPITransfer(int address, int len, unsigned char* txdata, unsigned char* rxdata);
+		miDriver::DriverResults open();
+		miDriver::DriverResults close();
+		miDriver::DriverResults read(int address, int len, unsigned char* data);
+		miDriver::DriverResults write(int address, int len, unsigned char* data);
+		miDriver::DriverResults transfer(int address, int len, unsigned char* txdata, unsigned char* rxdata);
 	};
 }
 
