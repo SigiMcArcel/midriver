@@ -19,13 +19,13 @@ miDriver::DriverResults miDriver::GPIODriver::GpioEnable(int32_t pin, bool enabl
 	stream.open(gpioPath + std::string("/export"),std::fstream::out);
 	if (stream.fail())
 	{
-		std::cerr << __PRETTY_FUNCTION__ << "Error: " << std::strerror(errno) << std::endl;
+		std::cerr << __PRETTY_FUNCTION__ << " Error: " << std::strerror(errno) << std::endl;
 		return DriverResults::ErrorOpen;
 	}
 	stream.write(strPin.c_str(), strPin.size());
 	if (stream.fail())
 	{
-		std::cerr << __PRETTY_FUNCTION__ << "Error: " << std::strerror(errno) << std::endl;
+		std::cerr << __PRETTY_FUNCTION__ << " Error: " << std::strerror(errno) << std::endl;
 		stream.close();
 		return DriverResults::ErrorOpen;
 	}
@@ -48,14 +48,14 @@ miDriver::DriverResults miDriver::GPIODriver::GpioSetDirection(int32_t pin, miDr
 	stream.open(strCmd, std::fstream::out);
 	if (stream.fail())
 	{
-		std::cerr << __PRETTY_FUNCTION__ << "Error: " << std::strerror(errno) << strCmd << std::endl;
+		std::cerr << __PRETTY_FUNCTION__ << " Error: " << std::strerror(errno) << strCmd << std::endl;
 		return DriverResults::ErrorOpen;
 
 	}
 	stream.write(strVal.c_str(), strVal.size());
 	if (stream.fail())
 	{
-		std::cerr << __PRETTY_FUNCTION__ << "Error: " << std::strerror(errno) << std::endl;
+		std::cerr << __PRETTY_FUNCTION__ << " Error: " << std::strerror(errno) << std::endl;
 		stream.close();
 		return DriverResults::ErrorWrite;
 	}
@@ -74,7 +74,7 @@ bool miDriver::GPIODriver::GpioRead(int32_t pin, DriverResults* result)
 	stream.open(strCmd, std::fstream::in);
 	if (stream.fail())
 	{
-		std::cerr << __PRETTY_FUNCTION__ << "Error: " << std::strerror(errno) << std::endl;
+		std::cerr << __PRETTY_FUNCTION__ << " Error: " << std::strerror(errno) << strCmd << std::endl;
 		if (result != nullptr)
 			*result = DriverResults::ErrorOpen;
 
@@ -83,8 +83,8 @@ bool miDriver::GPIODriver::GpioRead(int32_t pin, DriverResults* result)
 
 	stream.read(buffer, length);
 	if (stream.fail())
-	{
-		std::cerr << __PRETTY_FUNCTION__ << "Error: " << std::strerror(errno) << std::endl;
+	{ 
+		std::cerr << __PRETTY_FUNCTION__ << " Error: " << std::strerror(errno) << strCmd << std::endl;
 		stream.close();
 		if (result != nullptr)
 			*result = DriverResults::ErrorRead;
@@ -113,13 +113,13 @@ miDriver::DriverResults miDriver::GPIODriver::GpioWrite(int32_t pin, bool value)
 	stream.open(strCmd, std::fstream::out);
 	if (stream.fail())
 	{
-		std::cerr << __PRETTY_FUNCTION__ << "Error: " << std::strerror(errno) << std::endl;
+		std::cerr << __PRETTY_FUNCTION__ << " Error: " << std::strerror(errno) << strCmd << std::endl;
 		return DriverResults::ErrorOpen;
 	}
 	stream.write(strVal.c_str(), strVal.size());
 	if (stream.fail())
 	{
-		std::cerr << __PRETTY_FUNCTION__ << "Error: " << std::strerror(errno) << std::endl;
+		std::cerr << __PRETTY_FUNCTION__ << " Error: " << std::strerror(errno) << strCmd << std::endl;
 		stream.close();
 		return DriverResults::ErrorWrite;
 	}

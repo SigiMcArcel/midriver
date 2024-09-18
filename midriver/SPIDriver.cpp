@@ -40,12 +40,7 @@ int miDriver::SPIDriver::configure(int fd)
     int bits = (int)_Bits;
     int speed = _Speed;
     int result = 0;
-    int lsb = 0;
-
-    if (_Bits == SPI8Bits)
-    {
-        bits = 0;
-    }
+  
     switch (_Mode)
     {
     case SPIModes::SPIMode0:
@@ -115,13 +110,14 @@ int miDriver::SPIDriver::configure(int fd)
         perror("Could not set SPI speed (RD)...ioctl fail");
         return result;
     }
-
+#if 0
     result = ioctl(fd, SPI_IOC_WR_LSB_FIRST, &lsb);
     if (result < 0)
     {
         perror("Could not set SPI lsb...ioctl fail");
         return result;
     }
+#endif
 	return 0;
 }
 
