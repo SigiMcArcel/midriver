@@ -14,9 +14,9 @@ miDriver::DriverResults miDriver::SPIDriver::open()
 
      _Fd =::open(_Device.c_str(), O_RDWR);
    
-    if (_Fd != -1)
+    if (_Fd == -1)
     {
-        printf("%s configure failed  %s %s\n", __func__, strerror(errno), _Device.c_str());
+        printf("%s open failed  %s %s\n", __func__, strerror(errno), _Device.c_str());
         return miDriver::DriverResults::ErrorOpen;
     }
     if (configure(_Fd) < 0)
@@ -160,5 +160,6 @@ miDriver::DriverResults miDriver::SPIDriver::transfer(int address, int len, unsi
         printf("%s failed  %s %s\n", __func__, strerror(errno), _Device.c_str());
         return miDriver::DriverResults::ErrorWrite;
     }
+
     return miDriver::DriverResults::Ok;
 }

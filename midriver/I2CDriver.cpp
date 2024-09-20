@@ -16,13 +16,13 @@ miDriver::DriverResults miDriver::I2CDriver::open()
 	_Handle = ::open(_I2CPath.c_str(), O_RDWR);
 	if(_Handle == -1)
 	{
-		printf("%s error %s %s\n", strerror(errno),__func__ _I2CPath.c_str());
+		printf("%s error %s %s\n", strerror(errno),__func__, _I2CPath.c_str());
 		return miDriver::DriverResults::ErrorOpen;
 	}
 	result = ::ioctl(_Handle, I2C_SLAVE, _Address);
 	if (result == -1)
 	{
-		printf("%s error %s %s\n", strerror(errno), __func__ _I2CPath.c_str());
+		printf("%s error %s %s\n", strerror(errno), __func__, _I2CPath.c_str());
 		return miDriver::DriverResults::ErrorOpen;
 	}
 	return miDriver::DriverResults::Ok;
