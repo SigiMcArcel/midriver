@@ -19,12 +19,12 @@ miDriver::DriverResults miDriver::ModbusDriver::open()
 		return miDriver::DriverResults::ErrorOpen;
 	}
 	modbus_rtu_set_serial_mode(_Handle, MODBUS_RTU_RS485);
-	//modbus_rtu_set_rts_delay(_Handle, 1000);
+	modbus_rtu_set_rts_delay(_Handle, 100);
 	//modbus_set_debug(_modbusHandle, 1);
-	/*modbus_set_error_recovery(_modbusHandle,
-		MODBUS_ERROR_RECOVERY_LINK |
-		MODBUS_ERROR_RECOVERY_PROTOCOL);*/
-	modbus_set_response_timeout(_Handle, 200000, 200000);
+	modbus_set_error_recovery(_Handle,
+		static_cast<modbus_error_recovery_mode>(
+			MODBUS_ERROR_RECOVERY_LINK | MODBUS_ERROR_RECOVERY_PROTOCOL));
+	modbus_set_response_timeout(_Handle, 0, 100000);
 	if (modbus_connect(_Handle) == -1)
 	{
 		printf("miDriver::ModbusDriver::open  error %s %s\n", strerror(errno), _Device.c_str());
@@ -44,7 +44,6 @@ void miDriver::ModbusDriver::close()
 miDriver::DriverResults miDriver::ModbusDriver::readInputBits(int address, int count, ModbusDriverAccessType_e type, unsigned char* data)
 {
 	int result = 0;
-	int coutRxTot = 0;
 	uint8_t inp[32] = { 0 };
 
 	if (_Handle == nullptr)
