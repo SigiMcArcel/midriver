@@ -37,7 +37,7 @@ namespace miDriver
 		size_t Len;
 	};
 
-	class MidiDriver : public miutils::EventListener
+	class MidiDriver : public miutils::TimerEventListener
 	{
 	private:
 		const std::size_t _MaxWriteMessage = 200;
@@ -120,7 +120,7 @@ namespace miDriver
 
 
 		// Geerbt über EventListener
-		virtual void eventOccured(void* sender, const std::string& name) override;
+		virtual void timerEventOccured(void* sender, const std::string& name) override;
 
 	};
 	

@@ -21,8 +21,8 @@ miDriver::DriverResults miDriver::MidiDriver::open()
 		return miDriver::DriverResults::ErrorOpen;
 	}
 	
-		_ReadTimer.Start(0,this);
-		_WriteTimer.Start(0,this);
+		_ReadTimer.Start();
+		_WriteTimer.Start();
 	
 	return miDriver::DriverResults::Ok;
 }
@@ -70,7 +70,7 @@ miDriver::DriverResults miDriver::MidiDriver::write(int len, unsigned char* data
 	return miDriver::DriverResults::Ok;
 }
 
-void miDriver::MidiDriver::eventOccured(void* sender, const std::string& name)
+void miDriver::MidiDriver::timerEventOccured(void* sender, const std::string& name)
 {
 	
 	if (name == "WriteTimer")

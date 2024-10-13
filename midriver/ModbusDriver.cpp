@@ -19,11 +19,11 @@ miDriver::DriverResults miDriver::ModbusDriver::open()
 		return miDriver::DriverResults::ErrorOpen;
 	}
 	modbus_rtu_set_serial_mode(_Handle, MODBUS_RTU_RS485);
-	modbus_rtu_set_rts_delay(_Handle, 100);
+	//modbus_rtu_set_rts_delay(_Handle, 100);
 	//modbus_set_debug(_modbusHandle, 1);
-	modbus_set_error_recovery(_Handle,
+	/*modbus_set_error_recovery(_Handle,
 		static_cast<modbus_error_recovery_mode>(
-			MODBUS_ERROR_RECOVERY_LINK | MODBUS_ERROR_RECOVERY_PROTOCOL));
+			MODBUS_ERROR_RECOVERY_LINK | MODBUS_ERROR_RECOVERY_PROTOCOL));*/
 	modbus_set_response_timeout(_Handle, 0, 100000);
 	if (modbus_connect(_Handle) == -1)
 	{
@@ -48,19 +48,19 @@ miDriver::DriverResults miDriver::ModbusDriver::readInputBits(int address, int c
 
 	if (_Handle == nullptr)
 	{
-		printf("miDriver::ModbusDriver::read  error : invalid handle\n");
+		printf("miDriver::ModbusDriver::readInputBits  error : invalid handle\n");
 		return miDriver::DriverResults::ErrorRead;
 	}
 
 	if (data == nullptr || address == 0 || count == 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : invalid parameter\n");
+		printf("miDriver::ModbusDriver::readInputBits  error : invalid parameter\n");
 		return miDriver::DriverResults::ErrorRead;
 	}
 
 	if (modbus_set_slave(_Handle, address) < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : set slave failed\n");
+		printf("miDriver::ModbusDriver::readInputBits  error : set slave failed\n");
 		return miDriver::DriverResults::ErrorRead;
 	}
 	memset(inp, 0, 32);
@@ -69,7 +69,7 @@ miDriver::DriverResults miDriver::ModbusDriver::readInputBits(int address, int c
 	::usleep(1000);
 	if(result < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : modbus_read_input_bits failed error %s\n", strerror(errno));
+		printf("miDriver::ModbusDriver::readInputBits  error : modbus_read_input_bits failed error %s\n", strerror(errno));
 		return miDriver::DriverResults::ErrorRead;
 	}
 
@@ -99,26 +99,26 @@ miDriver::DriverResults miDriver::ModbusDriver::readInputRegisters(int address, 
 	int result = 0;
 	if (_Handle == nullptr)
 	{
-		printf("miDriver::ModbusDriver::read  error %s\n", strerror(errno));
+		printf("miDriver::ModbusDriver::readInputRegisters  error : invalid handle\n");
 		return miDriver::DriverResults::ErrorRead;
 	}
 
 	if (data == nullptr || address == 0 || count == 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : invalid parameter\n");
+		printf("miDriver::ModbusDriver::readInputRegisters  error : invalid parameter\n");
 		return miDriver::DriverResults::ErrorRead;
 	}
 
 	if (modbus_set_slave(_Handle, address) < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : set slave failed\n");
+		printf("miDriver::ModbusDriver::readInputRegisters  error : set slave failed %s \n", strerror(errno));
 		return miDriver::DriverResults::ErrorRead;
 	}
 
 	result = modbus_read_input_registers(_Handle, address, count, reinterpret_cast <uint16_t*>(data));
 	if (result < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : modbus_read_input_registers failed\n");
+		printf("miDriver::ModbusDriver::read  error : modbus_read_input_registers failed %s\n", strerror(errno));
 		return miDriver::DriverResults::ErrorRead;
 	}
 
@@ -130,26 +130,26 @@ miDriver::DriverResults miDriver::ModbusDriver::readRegisters(int address, int c
 	int result = 0;
 	if (_Handle == nullptr)
 	{
-		printf("miDriver::ModbusDriver::read  error : invalid handle\n");
+		printf("miDriver::ModbusDriver::readRegisters  error : invalid handle\n");
 		return miDriver::DriverResults::ErrorRead;
 	}
 
 	if (data == nullptr || address == 0 || count == 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : invalid parameter\n");
+		printf("miDriver::ModbusDriver::readRegisters  error : invalid parameter\n");
 		return miDriver::DriverResults::ErrorRead;
 	}
 
 	if (modbus_set_slave(_Handle, address) < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : set slave failed\n");
+		printf("miDriver::ModbusDriver::readRegisters  error : set slave failed\n");
 		return miDriver::DriverResults::ErrorRead;
 	}
 
 	result = modbus_read_input_registers(_Handle, address, count, reinterpret_cast <uint16_t*>(data));
 	if (result < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : modbus_read_input_registers failed\n");
+		printf("miDriver::ModbusDriver::readRegisters  error : modbus_read_input_registers failed %s \n", strerror(errno));
 		return miDriver::DriverResults::ErrorRead;
 	}
 
@@ -162,20 +162,20 @@ miDriver::DriverResults miDriver::ModbusDriver::writeBits(int address, ModbusDri
 	uint8_t outp[32] = { 0 };
 	if (_Handle == nullptr)
 	{
-		printf("miDriver::ModbusDriver::write  error : invalid handle\n");
+		printf("miDriver::ModbusDriver::writeBits  error : invalid handle\n");
 		return miDriver::DriverResults::ErrorWrite;
 	}
 
 	if (data == nullptr || address == 0 || count == 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : invalid parameter\n");
+		printf("miDriver::ModbusDriver::writeBits  error : invalid parameter\n");
 		return miDriver::DriverResults::ErrorWrite;
 	}
 
 	if (modbus_set_slave(_Handle, address) < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : set slave failed\n");
-		return miDriver::DriverResults::ErrorRead;
+		printf("miDriver::ModbusDriver::writeBits  error : set slave failed\n");
+		return miDriver::DriverResults::ErrorWrite;
 	}
 
 	if (type == ModbusDriverAccessType_e::BITS)
@@ -202,8 +202,8 @@ miDriver::DriverResults miDriver::ModbusDriver::writeBits(int address, ModbusDri
 	result = modbus_write_bits(_Handle, 0, count, outp);
 	if (result < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : modbus_read_input_registers failed\n");
-		return miDriver::DriverResults::ErrorRead;
+		//printf("miDriver::ModbusDriver::writeBits  error : modbus_write_bits failed %s \n", strerror(errno));
+		return miDriver::DriverResults::ErrorWrite;
 	}
 
 	return miDriver::DriverResults::Ok;
@@ -214,27 +214,27 @@ miDriver::DriverResults miDriver::ModbusDriver::writeRegister(int address, int c
 	int result = 0;
 	if (_Handle == nullptr)
 	{
-		printf("miDriver::ModbusDriver::write  error : invalid handle\n");
+		printf("miDriver::ModbusDriver::writeRegister  error : invalid handle\n");
 		return miDriver::DriverResults::ErrorWrite;
 	}
 
 	if (data == nullptr || address == 0 || count == 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : invalid parameter\n");
+		printf("miDriver::ModbusDriver::writeRegister  error : invalid parameter\n");
 		return miDriver::DriverResults::ErrorWrite;
 	}
 
 	if (modbus_set_slave(_Handle, address) < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : set slave failed\n");
-		return miDriver::DriverResults::ErrorRead;
+		printf("miDriver::ModbusDriver::writeRegister  error : set slave failed\n");
+		return miDriver::DriverResults::ErrorWrite;
 	}
 
 	result = modbus_write_registers(_Handle, address, count, reinterpret_cast <uint16_t*>(data));
 	if (result < 0)
 	{
-		printf("miDriver::ModbusDriver::read  error : modbus_read_input_registers failed\n");
-		return miDriver::DriverResults::ErrorRead;
+		printf("miDriver::ModbusDriver::writeRegister  error : modbus_write_registers failed %s \n", strerror(errno));
+		return miDriver::DriverResults::ErrorWrite;
 	}
 
 	return miDriver::DriverResults::Ok;

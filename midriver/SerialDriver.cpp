@@ -24,8 +24,8 @@ miDriver::DriverResults miDriver::SerialDriver::open()
 		return miDriver::DriverResults::ErrorOpen;
 	}
 
-	_ReadTimer.Start(0, this);
-	_WriteTimer.Start(0, this);
+	_ReadTimer.Start();
+	_WriteTimer.Start();
 
 	return miDriver::DriverResults::Ok;
 }
@@ -193,9 +193,7 @@ miDriver::DriverResults  miDriver::SerialDriver::serialRegister(SerialDriverStri
 	return miDriver::DriverResults();
 }
 
-
-
-void miDriver::SerialDriver::eventOccured(void* sender, const std::string& name)
+void miDriver::SerialDriver::timerEventOccured(void* sender, const std::string& name)
 {
 
 	if (name == "WriteTimer")

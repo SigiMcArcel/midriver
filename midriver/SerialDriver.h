@@ -20,7 +20,7 @@ namespace miDriver
 
 	};
 
-	class SerialDriver : public miutils::EventListener
+	class SerialDriver : public miutils::TimerEventListener
 	{
 		std::string _SerialDevPath;
 		int _Baudrate;
@@ -89,7 +89,7 @@ namespace miDriver
 
 
 		// Geerbt über EventListener
-		virtual void eventOccured(void* sender, const std::string& name) override;
+		virtual void timerEventOccured(void* sender, const std::string& name) override;
 
 	};
 }
