@@ -4,32 +4,34 @@ includedir=$(prefix)/include
 libdir=$(prefix)/lib
 
 INCLUDES = -I. -I/.
-CXX_FLAGS = -fpic -Wall -Wl,--no-undefined
-LD_FLAGS = -shared
+CXXFLAGS = -fpic -Wall -Wl,--no-undefined
+LD_FLAGS = -shared -lpthread
 
-SOURCES=GPIODriver.cpp I2CDriver.cpp SPIDriver.cpp MidiDriver.cpp SerialDriver.cpp
-OBJECTS=$(SOURCES:.cpp=.o)
+# Automatisch alle .cpp-Dateien im aktuellen Verzeichnis als SOURCES verwenden
+SOURCES := $(wildcard *.cpp)
+OBJECTS := $(SOURCES:.cpp=.o)
 
-LIBRARYOUT=libmidriver.so
+# Bibliotheksname basierend auf dem Verzeichnisnamen erstellen
+PROJECT_NAME := $(notdir $(CURDIR))
+LIBRARYOUT = lib$(PROJECT_NAME).so
 
-
+# Regel zum Kompilieren der .cpp-Dateien zu .o-Dateien
 .cpp.o:
-	$(CXX) $(CXX_FLAGS) $(INCLUDES) -c $<
-$(LIBRARYOUT):$(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<
+
+# Regel zum Erstellen der Bibliothek
+$(LIBRARYOUT): $(OBJECTS)
 	$(CXX) $(LD_FLAGS) $(OBJECTS) -o $(LIBRARYOUT)
+
+# Regel zum Bereinigen der Build-Artefakte
 clean:
 	$(RM) $(LIBRARYOUT) *.o
-	
 
+# Regel zur Installation der Bibliothek und Header-Dateien
 install: $(LIBRARYOUT)
-	install -d $(DESTDIR)/${libdir}
-	install -D -m 0644 libmidriver.so $(DESTDIR)/${libdir}/$(LIBRARYOUT)
-	install -d $(DESTDIR)/${includedir}
-	install -d $(DESTDIR)/${includedir}/mi
-	install -d $(DESTDIR)/${includedir}/mi/midriver
-	install -D -m 0644 DriverBase.h $(DESTDIR)/${includedir}/mi/midriver/DriverBase.h
-	install -D -m 0644 I2CDriver.h $(DESTDIR)/${includedir}/mi/midriver/I2CDriver.h
-	install -D -m 0644 SPIDriver.h $(DESTDIR)/${includedir}/mi/midriver/SPIDriver.h
-	install -D -m 0644 GPIODriver.h $(DESTDIR)/${includedir}/mi/midriver/GPIODriver.h
-	install -D -m 0644 MidiDriver.h $(DESTDIR)/${includedir}/mi/midriver/MidiDriver.h
-	install -D -m 0644 SerialDriver.h $(DESTDIR)/${includedir}/mi/midriver/SerialDriver.h
+	install -d $(DESTDIR)/$(libdir)
+	install -D -m 0644 $(LIBRARYOUT) $(DESTDIR)/$(libdir)/$(LIBRARYOUT)
+	install -d $(DESTDIR)/$(includedir)/mi/$(PROJECT_NAME)
+	for header in *.h; do \
+		install -D -m 0644 $$header $(DESTDIR)/$(includedir)/mi/$(PROJECT_NAME)/$$header; \
+	done
