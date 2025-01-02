@@ -70,7 +70,7 @@ miDriver::DriverResults miDriver::MidiDriver::write(int len, unsigned char* data
 	return miDriver::DriverResults::Ok;
 }
 
-void miDriver::MidiDriver::timerEventOccured(void* sender, const std::string& name)
+bool miDriver::MidiDriver::timerEventOccured(void* sender, const std::string& name)
 {
 	
 	if (name == "WriteTimer")
@@ -82,6 +82,7 @@ void miDriver::MidiDriver::timerEventOccured(void* sender, const std::string& na
 		
 		readProc();
 	}
+	return false;
 }
 
 miDriver::DriverResults miDriver::MidiDriver::read(miDriver::MidiMessage& data)

@@ -120,7 +120,7 @@ namespace miDriver
 
 
 		// Geerbt über EventListener
-		virtual void timerEventOccured(void* sender, const std::string& name) override;
+		virtual bool timerEventOccured(void* sender, const std::string& name) override;
 
 	};
 	

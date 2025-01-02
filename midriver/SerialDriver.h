@@ -4,6 +4,7 @@
 #include <mi/miutils/Timer.h>
 #include <mi/miutils/Semaphore.h>
 #include <list>
+#include <termios.h>
 
 namespace miDriver
 {
@@ -35,11 +36,14 @@ namespace miDriver
 		std::string _Delemiter;
 		std::size_t _Threshold;
 		miutils::CriticalSection _CriticalSection;
+		bool _Stop;
+		struct termios _oldTty;
 
 		int read(int len, unsigned char* data);
 		miDriver::DriverResults write(int len, unsigned char* data);
 		void readProc();
 		void writeProc();
+		void configure();
 
 	public:
 		SerialDriver(int baudrate)
@@ -56,6 +60,7 @@ namespace miDriver
 			, _Delemiter("")
 			, _Threshold(0)
 			, _CriticalSection()
+			, _Stop(false)
 		{
 		}
 
@@ -73,6 +78,26 @@ namespace miDriver
 			, _Delemiter("")
 			, _Threshold(0)
 			, _CriticalSection()
+			, _Stop(false)
+		{
+
+		}
+
+		SerialDriver(std::string dev, int baudrate,int prio)
+			:_SerialDevPath(dev)
+			, _Baudrate(baudrate)
+			, _Handle(-1)
+			, _InputBuffer()
+			, _OutputBuffer()
+			, _ReadTimer("ReadTimer",  1, 0, prio + 2, miutils::SchedulerType::Fifo)
+			, _WriteTimer("WriteTimer", 1, 0, prio, miutils::SchedulerType::Fifo)
+			, _Semaphore()
+			, _DataReceivedEvent(nullptr)
+			, _StringReceivedEvent(nullptr)
+			, _Delemiter("")
+			, _Threshold(0)
+			, _CriticalSection()
+			, _Stop(false)
 		{
 
 		}
@@ -85,11 +110,11 @@ namespace miDriver
 		miDriver::DriverResults  serialRead(std::list<unsigned char>& data);
 		miDriver::DriverResults  serialRead(std::string& data);
 		miDriver::DriverResults  serialRegister(SerialDriverDataReceivedEvent* callback, int threshold);
-		miDriver::DriverResults  serialRegister(SerialDriverStringReceivedEvent* callback, const std::string delemiter);
+		miDriver::DriverResults  serialRegister(SerialDriverStringReceivedEvent* callback, const std::string& delemiter);
 
 
 		// Geerbt über EventListener
-		virtual void timerEventOccured(void* sender, const std::string& name) override;
+		virtual bool timerEventOccured(void* sender, const std::string& name) override;
 
 	};
 }
